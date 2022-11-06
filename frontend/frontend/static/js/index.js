@@ -1,6 +1,7 @@
 import Cadastro from "./views/Cadastro";
 import Catalogo from "./views/Catalogo";
 import Menu from "./views/Menu";
+import NovoFilme from "./views/NovoFilme";
 
 
 
@@ -14,6 +15,7 @@ const getParams = match => {
 }
 
 
+
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 const navigateTo = url => {
@@ -22,12 +24,10 @@ const navigateTo = url => {
 };
 
 const router = async () => {
-    // console.log(pathToRegex("/posts/:id"))
-    // /filmes/:id
     const routes = [
         { path: "/",            view: Menu },
         { path: "/cadastro",    view: Cadastro },
-        { path: "/filmes/:id/:dcode",  view: Catalogo},
+        { path: "/novo-filme",  view: NovoFilme},
         { path: "/catalogo",    view: Catalogo }
     ];
 
