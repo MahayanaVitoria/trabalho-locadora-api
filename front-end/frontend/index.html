@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locadora</title>
+    <link rel="stylesheet" href="static/css/index.css">
+
+    <script>
+        function mask_cpf() {
+            var cpf = document.getElementById('cpf')
+            if (cpf.value.length == 3 || cpf.value.length == 7) {
+                cpf.value += "."
+            } else if (cpf.value.length == 11) {
+                cpf.value += "-"
+            }
+        }
+
+        function mask_phone() {
+            var telefone = document.getElementById('telefone')
+            if (telefone.value.length == 2) {
+                telefone.value += " "
+            } else if (telefone.value.length == 8) {
+                telefone.value += "-"
+            }
+        }
+    </script>
+</head>
+<body>
+    
+    <nav class="nav">
+        <a href="/" class="nav__link" data-link>Menu Principal</a>
+        <a href="/cadastro" class="nav__link" data-link>Cadastro</a>
+        <a href="/catalogo" class="nav__link" data-link>Catálogo</a>
+    </nav>
+
+    <div id="app"></div>
+    
+    <script type="module" src="static/js/index.js"></script>
+</body>
+</html>
