@@ -12,6 +12,9 @@ export default class extends AbstractView {
             <p> 
                 Esta é a sessão de filmes disponíveis para alugar!
             </p>
+            
+            <button onclick="listarFilmes()">Listar Filmes</button>
+            <div id="lista-filmes"></div>
         `;
     }
 }
