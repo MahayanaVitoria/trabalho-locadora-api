@@ -8,7 +8,6 @@ export default class extends AbstractView {
 
     async getHtml() {
         return `
-        
             <h1>Cadastro</h1>
             <div class="form">
                 <input id="nome-completo" placeholder="Nome Completo" type="text"/>    
