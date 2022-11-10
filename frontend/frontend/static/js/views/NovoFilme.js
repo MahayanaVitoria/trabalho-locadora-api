@@ -3,12 +3,12 @@ import AbstractView from "./AbstractView";
 export default class extends AbstractView {
     constructor() {
         super();
-        this.setTitle("Cadastro");
+        this.setTitle("Cadastro de Filmes");
     }
 
     async getHtml() {
         return `
-            <h1>Cadastro</h1>
+            <h1>Cadastro de Filmes</h1>
             <div class="form">
                 <input id="nome" placeholder="Nome do Filme" type="text" autocomplete="off"/>    
                 <input id="genero" placeholder="Gênero" type="text"/>
