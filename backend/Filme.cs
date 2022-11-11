@@ -37,6 +37,7 @@ namespace Locadora
         public DateTime     DataLancamento  { get; set; } 
         public DateTime?    DataAdicionado  { get; set; }
         public float?       Preco           { get; set; } 
+        public bool         IsAlugado       { get; set; } = false;
     }
 
     public class Cliente
@@ -63,6 +64,7 @@ namespace Locadora
         public DateTime?    DataAluguel     { get; set; }
         public DateTime     DataLimite      { get; set; }
         public Estado       EstadoDevolução { get; set; }
+        
 
         public virtual Filme    FilmeAlugado    { get; set; }
         public virtual Cliente  ClienteAlugador { get; set; }
@@ -189,13 +191,12 @@ namespace Locadora
                 var filmeRelacionado = database.Filmes.Find(aluguel.FilmeID);
                 
                 if (clienteRelacionado != null && filmeRelacionado != null)
-                {
                     if(clienteRelacionado.getAge() < 18 && filmeRelacionado.Classificacao == Classificacao.C18)
                         return Results.Problem("Classificação de filme não indicada para o cliente");
 
                     // aluguel.FilmeAlugado = filmeRelacionado;
                     // aluguel.ClienteAlugador = clienteRelacionado;
-                }
+                
             
                 aluguel.DataAluguel = DateTime.Now;
                 aluguel.DataLimite = new DateTime(DateTime.Now.Ticks).AddDays(7);

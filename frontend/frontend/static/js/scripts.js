@@ -16,6 +16,9 @@ function mask_phone() {
     }
 }
 
+function teste() {
+    console.log("EAE")
+}
 
 const userLocale =
 navigator.languages && navigator.languages.length
@@ -31,15 +34,27 @@ var url = 'http://localhost:3000/'
 
 function cadastrarCliente() 
 {
+    nome = document.getElementById('nome-completo')
+    cpf = document.getElementById('cpf')
+    telefone = document.getElementById('telefone')
+    nascimento = document.getElementById('data-nascimento')
+
     let body = 
     {
-        "NomeCompleto": document.getElementById('nome-completo').value,
-        "CPF": document.getElementById('cpf').value.replace('.', '').replace('-', ''),
-        "telefone": document.getElementById('telefone').value,
-        "dataNascimento": document.getElementById('data-nascimento').value
+        "NomeCompleto": nome.value,
+        "CPF": cpf.value.replace('.', '').replace('-', ''),
+        "telefone": telefone.value,
+        "dataNascimento": nascimento.value
     }
+    Post(body, "clientes").then( () => {
+        nome.value = ""
+        cpf.value = ""
+        telefone.value = ""
+        nascimento.value = ""
+    })
 
-    Post(body, "clientes")
+
+
 }
 
 function cadastrarFilme()
@@ -123,6 +138,7 @@ function listarFilmes()
     {
         let listaFilmes = document.getElementById('lista-filmes')
 
+        console.log(filmes)
         while(listaFilmes.firstChild)
             listaFilmes.removeChild(listaFilmes.firstChild)
 
@@ -160,4 +176,64 @@ function listarFilmes()
         }
         
     })
+}
+
+
+function listarClientes()
+{
+    fetch(url + 'clientes')
+    .then(response => response.json())
+    .then((clientes) =>
+    {
+
+        console.log(clientes)
+        let listaClientes = document.getElementById('lista-clientes')
+        listaClientes.setAttribute('class', 'box p-2')
+
+        while(listaClientes.firstChild)
+            listaClientes.removeChild(listaClientes.firstChild)
+
+        for(let cliente of clientes)
+        {  
+            
+            let divCliente = document.createElement('div')
+            divCliente.setAttribute('class', 'border border-dark rounded my-2 p-2 mx-2 bg-dark text-light')
+
+            let divNome = document.createElement('p')
+            divNome.setAttribute('class', 'ms-2 mt-2')
+            divNome.innerHTML = "Nome: " + cliente.nomeCompleto
+            divCliente.appendChild(divNome)
+
+            let divTel = document.createElement('p')
+            divTel.setAttribute('class', 'ms-2 mt-2')
+            divTel.innerHTML = "Telefone: " + cliente.telefone
+            divCliente.appendChild(divTel)
+
+
+            let divButtons = document.createElement('div')
+            divButtons.setAttribute('class', 'd-flex flex-row-reverse')
+
+            let editButton = document.createElement('button')
+            editButton.setAttribute('class', 'btn btn-outline-warning')
+            editButton.innerHTML = "Editar"
+
+            let deleteButton = document.createElement('button')
+            deleteButton.setAttribute('class', 'btn btn-outline-danger ms-2')
+            deleteButton.innerHTML = "Deletar"
+
+            deleteButton.value = cliente.id
+
+            divButtons.appendChild(deleteButton)
+            divButtons.appendChild(editButton)
+
+            divCliente.appendChild(divButtons)
+
+            listaClientes.appendChild(divCliente)
+        }
+    })
+}
+
+
+function deletarCliente()
+{
 }
