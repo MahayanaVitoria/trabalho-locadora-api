@@ -9,8 +9,6 @@ const getParams = match => {
     const values = match.result.slice(1);    
     const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
 
-    console.log(Array.from(match.route.path.matchAll(/:(\w+)/g)))
-
     return {}
 }
 
@@ -51,6 +49,7 @@ const router = async () => {
     const view = new match.route.view(getParams(match));
 
     document.querySelector("#app").innerHTML = await view.getHtml();
+    await view.onRender()
 };
 
 window.addEventListener("popstate", router);

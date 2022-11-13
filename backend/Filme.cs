@@ -117,7 +117,7 @@ namespace Locadora
 
                 filme.DataAdicionado = DateTime.Now;
 
-                filme.Preco = 5.50f + (int)filme.Classificacao;
+                filme.Preco = 5.50f + (int) filme.Classificacao;
 
                 database.Filmes.Add(filme);
                 database.SaveChanges();
@@ -125,6 +125,8 @@ namespace Locadora
             });
 
             app.MapGet("/filmes/{id}", (Database database, long id) => database.Filmes.Find(id));
+
+            app.MapGet("/filmes/disponiveis", (Database database) => database.Filmes.Where(f => !f.IsAlugado));
 
             app.MapDelete("/filmes/{id}", (Database database, long id) =>
             {

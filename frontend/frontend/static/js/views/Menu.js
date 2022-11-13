@@ -9,9 +9,6 @@ export default class extends AbstractView {
     async getHtml() {
         return `
             <h1>Bem vindo a locadora!</h1>
-            <p> 
-                Para alugar filmes é necessário um cadastro! 
-            </p>
         `;
     }
 }

@@ -178,7 +178,6 @@ function listarFilmes()
     })
 }
 
-
 function listarClientes()
 {
     fetch(url + 'clientes')
@@ -279,3 +278,4 @@ function deletarCliente(id)
         alert('Não foi possível remover o cliente')
     })
 }
+
