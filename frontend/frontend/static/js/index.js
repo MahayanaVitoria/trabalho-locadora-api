@@ -1,7 +1,7 @@
-import Cadastro from "./views/Cadastro";
-import Catalogo from "./views/Catalogo";
+import Cliente from "./views/Cliente";
 import Menu from "./views/Menu";
-import NovoFilme from "./views/NovoFilme";
+import Filmes from "./views/Filmes";
+import Aluguel from "./views/Aluguel";
 
 
 
@@ -26,9 +26,9 @@ const navigateTo = url => {
 const router = async () => {
     const routes = [
         { path: "/",            view: Menu },
-        { path: "/cadastro",    view: Cadastro },
-        { path: "/novo-filme",  view: NovoFilme},
-        { path: "/catalogo",    view: Catalogo }
+        { path: "/clientes",    view: Cliente },
+        { path: "/filmes",      view: Filmes},
+        { path: "/alugueis",      view: Aluguel}
     ];
 
     // Test each route for match

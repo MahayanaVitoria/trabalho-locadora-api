@@ -184,14 +184,20 @@ function listarClientes()
     fetch(url + 'clientes')
     .then(response => response.json())
     .then((clientes) =>
-    {
+    {   
 
-        console.log(clientes)
         let listaClientes = document.getElementById('lista-clientes')
         listaClientes.setAttribute('class', 'box p-2')
 
         while(listaClientes.firstChild)
-            listaClientes.removeChild(listaClientes.firstChild)
+        listaClientes.removeChild(listaClientes.firstChild)
+
+        
+        if (clientes.length < 1)
+        {
+            alert("Não há nenhum cliente na base de dados")
+            return
+        }
 
         for(let cliente of clientes)
         {  
@@ -222,7 +228,14 @@ function listarClientes()
             deleteButton.innerHTML = "Deletar"
 
             deleteButton.value = cliente.id
+            deleteButton.onclick = () => {
 
+                if (window.confirm("Tem certeza que deseja remover " + cliente.nomeCompleto + " do sistema ?")) {
+                    deletarCliente(deleteButton.value)
+                }
+
+
+            }
             divButtons.appendChild(deleteButton)
             divButtons.appendChild(editButton)
 
@@ -233,7 +246,36 @@ function listarClientes()
     })
 }
 
-
-function deletarCliente()
-{
+function deletarCliente(id)
+{      
+    fetch(url + 'clientes/' + id,
+    {
+        'method': 'DELETE',
+        'redirect': 'follow'
+    })
+    .then((response) => 
+    {
+        if(response.ok)
+        {
+            return response.text()
+        }
+        else
+        {
+            return response.text().then((text) =>
+            {
+                throw new Error(text)
+            })
+        }
+    })
+    .then((output) => 
+    {
+        listarClientes()
+        console.log(output)
+        alert('Cliente removido')
+    })
+    .catch((error) =>
+    {
+        console.log(error)
+        alert('Não foi possível remover o cliente')
+    })
 }
