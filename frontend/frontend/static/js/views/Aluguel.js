@@ -18,31 +18,48 @@ export default class extends AbstractView {
                         </select>
                         
                         <select class="form-select" id="select-filmes">
-                            <option value="-1">Filme</options>                        
+                            <option value="-1">Filme</option>                        
                         </select>
                         
-                        <button onclick="" class="btn btn-success">Alugar</button>
+                        <button onclick="criarAluguel()" class="btn btn-success">Alugar</button>
                     </div>
+                </div>
+
+                                    
+                <div class="mb-5 border rounded p-2 pb-5">
+                    <h3> Lista de Alugueis </h3>
                     
-                    <div>
+                    <div class="form d-inline flex bg-highlight">
+                        <select class="form-select form-select-lg mb-3" id="select-clientes-2" aria-label=".form-select-lg example">
+                            <option value="-1">Selecione o Cliente </option>
+                        </select>
+
+                        <div class="d-flex flex-row-reverse">
+                            <button onclick="listarAlugueis()" class="btn btn-primary ">Buscar</button>
+                        </div>
+
+                        <h3 id="title-aluguel"></h3>
+                        <div id="lista-alugueis">
+                        
+                        </div>
+                    </div>      
+                </div>
                     
-                    </div>
-                    </div>
-                    
-                    `;
+            `;
     }
 
     async onRender() {
-        this.getClientes()
+        this.getClientes("select-clientes")
+        this.getClientes("select-clientes-2")
         this.getFilmes()
     }
 
-    getClientes() {
+    getClientes(id) {
         fetch("http://localhost:3000/clientes")
         .then(response => response.json())
         .then((clientes) =>
         {
-            let selectCliente = document.getElementById('select-clientes')
+            let selectCliente = document.getElementById(id)
 
             for(let c of clientes)
             {

@@ -37,27 +37,41 @@ function cadastrarCliente()
     nome = document.getElementById('nome-completo')
     cpf = document.getElementById('cpf')
     telefone = document.getElementById('telefone')
-    nascimento = document.getElementById('data-nascimento')
+    nascimento = document.getElementById('data-nascimento').value
 
-    let body = 
-    {
-        "NomeCompleto": nome.value,
-        "CPF": cpf.value.replace('.', '').replace('-', ''),
-        "telefone": telefone.value,
-        "dataNascimento": nascimento.value
+    if (nascimento.length != 10) {
+        return
     }
-    Post(body, "clientes").then( () => {
-        nome.value = ""
-        cpf.value = ""
-        telefone.value = ""
-        nascimento.value = ""
-    })
 
+    let ano = parseInt(nascimento.substring(0, 4))
 
+    let hoje = new Date().getFullYear()
 
+    console.log(ano)
+    console.log(hoje)
+    if ( ano < 1900 || ano > hoje)
+    {
+        alert("Ano de nascimento inválido")
+        return 
+    }
+
+    console.log(nascimento)
 }
 
 function cadastrarFilme()
+// let body = 
+// {
+//     "NomeCompleto": nome.value,
+//     "CPF": cpf.value.replace('.', '').replace('-', ''),
+//     "telefone": telefone.value,
+//     "dataNascimento": nascimento.value
+// }
+// Post(body, "clientes").then( () => {
+//     nome.value = ""
+//     cpf.value = ""
+//     telefone.value = ""
+//     nascimento.value = ""
+// })
 {
     console.log(document.getElementById('classificacao').value)
     let body = 
@@ -279,3 +293,164 @@ function deletarCliente(id)
     })
 }
 
+function criarAluguel()
+{
+    let idCliente = document.getElementById('select-clientes').value
+    let idFilme = document.getElementById('select-filmes').value
+
+    if (idCliente == -1) {
+        alert("Por favor, selecione um cliente")
+        return
+    }
+
+    if (idFilme == -1) {
+        alert("Por favor, selecione um filme")
+        return
+    }
+
+    let body =
+    {
+        "ClienteID": idCliente,
+        "FilmeID": idFilme
+    }
+
+    Post(body, "alugueis")
+}
+
+
+async function getFilmeById(id)
+{
+    const req = await fetch(url + 'filmes/' + id)
+    const res = await req.json()
+    return res
+}
+
+async function getAluguelByClient(id)
+{
+    const req = await fetch(url + 'alugueis/cliente/' + id)
+    const res = await req.json()
+    return res
+}
+
+async function listarAlugueis()
+{
+    let selectedClient = document.getElementById('select-clientes-2').value
+    
+    if (selectedClient == -1)
+    {
+        alert("Selecione o cliente que deseja verificar")
+        return
+    }  
+    let aluguelList = document.getElementById('lista-alugueis')
+    
+    while(aluguelList.firstChild)
+    {
+        aluguelList.removeChild(aluguelList.firstChild)
+    }
+    
+    alugueisDoCliente = await this.getAluguelByClient(selectedClient)
+    let titleAlugueis = document.getElementById('title-aluguel')
+
+    if (alugueisDoCliente.length < 1)
+    {
+        titleAlugueis.innerHTML = "Usuário não possui filmes alugados"
+        return
+    }
+
+
+    titleAlugueis.innerHTML = "Filmes alugados:"
+
+    for(var aluguel of alugueisDoCliente)
+    {
+        var filme = await this.getFilmeById(aluguel.filmeID)
+        let itemBox  = document.createElement('div')
+        itemBox.setAttribute('class', 'border p-2')
+
+        let labelNome = document.createElement('p')
+        labelNome.innerHTML = "Nome: " + filme.nome
+        itemBox.appendChild(labelNome)
+        
+        let labelEstado = document.createElement('p')
+        labelEstado.innerHTML = "Estado: " + getEstado(aluguel.estadoDevolução)
+        itemBox.appendChild(labelEstado)
+        
+
+        let divBotoes = document.createElement('div')
+        divBotoes.setAttribute('class', 'd-flex flex-row-reverse')
+
+        let botaoDevolver = document.createElement('button')
+        botaoDevolver.setAttribute('class', 'btn btn-warning')
+        
+        botaoDevolver.innerHTML = "Devolver"
+        botaoDevolver.value = aluguel.id
+        botaoDevolver.onclick = () => {
+            if(window.confirm("Tem certeza que deseja devolver este filme ? ")) {
+                devolverFilme(botaoDevolver.value)
+            }
+        }
+
+        if(aluguel.estadoDevolução == 1) {
+            botaoDevolver.disabled = true
+        }
+
+        divBotoes.append(botaoDevolver)
+
+        itemBox.append(divBotoes)
+
+        aluguelList.appendChild(itemBox)
+    }
+
+}
+
+function getEstado(en)
+{
+    console.log(en)
+    switch(en)
+    {
+        case 0:
+            return "Pendente"
+        case 1:
+            return "Devolvido"
+        case 2:
+            return "Atrasado"
+        default:
+            return "Indefinido"
+    }
+}
+
+
+function devolverFilme(id)
+{
+    fetch(url + "alugueis/devolver/" + id,
+    {
+        'method': 'PUT',
+        'redirect': "follow"
+    })
+    .then((response) => 
+    {
+        if(response.ok)
+        {
+            return response.text()
+        }
+        else
+        {
+            return response.text().then((text) =>
+            {
+                throw new Error(text)
+            })
+        }
+    })
+    .then((output) => 
+    {
+        listarAlugueis()
+        console.log(output)
+        alert('Filme Devolvido')
+    })
+    .catch((error) =>
+    {
+        console.log(error)
+        alert('Não foi possível devolver o filme')
+    })
+    
+    
+}

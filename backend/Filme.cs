@@ -199,6 +199,9 @@ namespace Locadora
                     // aluguel.FilmeAlugado = filmeRelacionado;
                     // aluguel.ClienteAlugador = clienteRelacionado;
                 
+                database.Filmes.Find(aluguel.FilmeID).IsAlugado = true;
+
+
             
                 aluguel.DataAluguel = DateTime.Now;
                 aluguel.DataLimite = new DateTime(DateTime.Now.Ticks).AddDays(7);
@@ -209,6 +212,14 @@ namespace Locadora
             });
 
             app.MapGet("/alugueis/{id}", (Database database, long id) => database.Alugueis.Find(id));
+
+            app.MapGet("/alugueis/cliente/{id}", (Database database, long id) => database.Alugueis.Where(aluguel => aluguel.ClienteID == id));
+
+            app.MapPut("/alugueis/devolver/{id}", (Database database, long id) => {
+                database.Alugueis.Find(id).EstadoDevolução = Estado.Devolvido;
+                database.SaveChanges();
+                return Results.Ok();
+            });
 
             app.MapDelete("/alugueis/{id}", (Database database, long id) =>
             {
