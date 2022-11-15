@@ -161,6 +161,24 @@ namespace Locadora
 
             app.MapGet("/clientes/{id}", (Database database, long id) => database.Clientes.Find(id));
 
+            app.MapPut("/clientes/{id}", (Database database, Cliente atualizado, long id) => 
+            {
+                var cliente = database.Clientes.Find(id);
+
+                if(cliente == null)
+                    return Results.NotFound();
+
+                if(null != atualizado.NomeCompleto) cliente.NomeCompleto = atualizado.NomeCompleto;
+                if(null != atualizado.CPF) cliente.CPF = atualizado.CPF;
+                if(null != atualizado.telefone) cliente.telefone = atualizado.telefone;
+                if(null != atualizado.dataNascimento) cliente.dataNascimento = atualizado.dataNascimento;
+
+    
+                database.SaveChanges();
+                return Results.Ok();
+            });
+
+
             app.MapDelete("/clientes/{id}", (Database database, long id) =>
             {
                 var cliente = database.Clientes.Find(id);

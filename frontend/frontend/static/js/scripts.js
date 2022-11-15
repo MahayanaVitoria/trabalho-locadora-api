@@ -16,10 +16,6 @@ function mask_phone() {
     }
 }
 
-function teste() {
-    console.log("EAE")
-}
-
 const userLocale =
 navigator.languages && navigator.languages.length
     ? navigator.languages[0]
@@ -29,14 +25,13 @@ var formatReal = (valor) => {
     return valor.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
 }
 
-
 var url = 'http://localhost:3000/'
 
 function cadastrarCliente() 
 {
-    nome = document.getElementById('nome-completo')
-    cpf = document.getElementById('cpf')
-    telefone = document.getElementById('telefone')
+    nome = document.getElementById('nome-completo').value
+    cpf = document.getElementById('cpf').value.replaceAll('.', '').replace('-', '')
+    telefone = document.getElementById('telefone').value
     nascimento = document.getElementById('data-nascimento').value
 
     if (nascimento.length != 10) {
@@ -47,7 +42,7 @@ function cadastrarCliente()
 
     let hoje = new Date().getFullYear()
 
-    console.log(ano)
+    console.log(cpf)
     console.log(hoje)
     if ( ano < 1900 || ano > hoje)
     {
@@ -55,25 +50,19 @@ function cadastrarCliente()
         return 
     }
 
-    console.log(nascimento)
+    let body =
+    {
+        "NomeCompleto": nome,
+        "CPF": cpf,
+        "telefone": telefone,
+        "dataNascimento": nascimento
+    }
+
+    Post(body, "clientes")
 }
 
 function cadastrarFilme()
-// let body = 
-// {
-//     "NomeCompleto": nome.value,
-//     "CPF": cpf.value.replace('.', '').replace('-', ''),
-//     "telefone": telefone.value,
-//     "dataNascimento": nascimento.value
-// }
-// Post(body, "clientes").then( () => {
-//     nome.value = ""
-//     cpf.value = ""
-//     telefone.value = ""
-//     nascimento.value = ""
-// })
 {
-    console.log(document.getElementById('classificacao').value)
     let body = 
     {
         "Nome": document.getElementById('nome').value,
@@ -124,6 +113,46 @@ async function Post(body, type)
     })
 }
 
+async function Put(body, type)
+{
+    fetch(url + type, 
+    {
+        'method': 'PUT',
+        'redirect': 'follow',
+        "headers":
+        {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        'body': JSON.stringify(body)
+    })
+    .then((response) => 
+    {
+        if(response.ok)
+        {
+            return response.text()
+        }
+        else
+        {
+            return response.text().then((text) =>
+            {
+                throw new Error(text)
+            })
+        }
+    })
+    .then((output) =>
+    {
+        console.log(output)
+        alert('Edição feita com sucesso')
+    })
+    .catch((error) =>
+    {
+        console.log(error)
+        alert("Não foi possível editar")
+    })
+
+    modoCadastroCliente()
+}
 
 const getClassificacao = (c) => {
     switch(c) {
@@ -199,8 +228,6 @@ function listarFilmes()
             buttonEdit.innerHTML = "Editar"
             buttonDiv.appendChild(buttonEdit)
 
-
-
             divFilme.appendChild(buttonDiv)
 
 
@@ -253,16 +280,19 @@ function listarClientes()
             let editButton = document.createElement('button')
             editButton.setAttribute('class', 'btn btn-outline-warning')
             editButton.innerHTML = "Editar"
+            editButton.onclick = () => {        
+               modoEditarCliente(cliente.id)
+            }
+
 
             let deleteButton = document.createElement('button')
             deleteButton.setAttribute('class', 'btn btn-outline-danger ms-2')
             deleteButton.innerHTML = "Deletar"
 
-            deleteButton.value = cliente.id
             deleteButton.onclick = () => {
 
                 if (window.confirm("Tem certeza que deseja remover " + cliente.nomeCompleto + " do sistema ?")) {
-                    deletarCliente(deleteButton.value)
+                    deletarCliente(cliente.id)
                 }
 
 
@@ -275,77 +305,6 @@ function listarClientes()
             listaClientes.appendChild(divCliente)
         }
     })
-}
-
-function deletarCliente(id)
-{      
-    fetch(url + 'clientes/' + id,
-    {
-        'method': 'DELETE',
-        'redirect': 'follow'
-    })
-    .then((response) => 
-    {
-        if(response.ok)
-        {
-            return response.text()
-        }
-        else
-        {
-            return response.text().then((text) =>
-            {
-                throw new Error(text)
-            })
-        }
-    })
-    .then((output) => 
-    {
-        listarClientes()
-        console.log(output)
-        alert('Cliente removido')
-    })
-    .catch((error) =>
-    {
-        console.log(error)
-        alert('Não foi possível remover o cliente')
-    })
-}
-
-function criarAluguel()
-{
-    let idCliente = document.getElementById('select-clientes').value
-    let idFilme = document.getElementById('select-filmes').value
-
-    if (idCliente == -1) {
-        alert("Por favor, selecione um cliente")
-        return
-    }
-
-    if (idFilme == -1) {
-        alert("Por favor, selecione um filme")
-        return
-    }
-
-    let body =
-    {
-        "ClienteID": idCliente,
-        "FilmeID": idFilme
-    }
-
-    Post(body, "alugueis")
-}
-async function getFilmeById(id)
-{
-    const req = await fetch(url + 'filmes/' + id)
-    const res = await req.json()
-    return res
-}
-
-async function getAluguelByClient(id)
-{
-    const req = await fetch(url + 'alugueis/cliente/' + id)
-    const res = await req.json()
-    return res
 }
 
 async function listarAlugueis()
@@ -418,6 +377,86 @@ async function listarAlugueis()
 
 }
 
+function deletarCliente(id)
+{      
+    fetch(url + 'clientes/' + id,
+    {
+        'method': 'DELETE',
+        'redirect': 'follow'
+    })
+    .then((response) => 
+    {
+        if(response.ok)
+        {
+            return response.text()
+        }
+        else
+        {
+            return response.text().then((text) =>
+            {
+                throw new Error(text)
+            })
+        }
+    })
+    .then((output) => 
+    {
+        listarClientes()
+        console.log(output)
+        alert('Cliente removido')
+    })
+    .catch((error) =>
+    {
+        console.log(error)
+        alert('Não foi possível remover o cliente')
+    })
+}
+
+function criarAluguel()
+{
+    let idCliente = document.getElementById('select-clientes').value
+    let idFilme = document.getElementById('select-filmes').value
+
+    if (idCliente == -1) {
+        alert("Por favor, selecione um cliente")
+        return
+    }
+
+    if (idFilme == -1) {
+        alert("Por favor, selecione um filme")
+        return
+    }
+
+    let body =
+    {
+        "ClienteID": idCliente,
+        "FilmeID": idFilme
+    }
+
+    Post(body, "alugueis")
+}
+
+async function getFilmeById(id)
+{
+    const req = await fetch(url + 'filmes/' + id)
+    const res = await req.json()
+    return res
+}
+
+async function getAluguelByClient(id)
+{
+    const req = await fetch(url + 'alugueis/cliente/' + id)
+    const res = await req.json()
+    return res
+}
+
+async function getClientById(id)
+{
+    const req = await fetch(url + 'clientes/' + id)
+    const res = await req.json()
+    return res
+}
+
+
 function getEstado(en)
 {
     console.log(en)
@@ -433,7 +472,6 @@ function getEstado(en)
             return "Indefinido"
     }
 }
-
 
 function devolverFilme(id)
 {
@@ -469,4 +507,98 @@ function devolverFilme(id)
     })
     
     
+}
+
+async function modoEditarCliente(id)
+{
+    let title = document.getElementById('title-cad-cliente')
+    title.innerHTML = "Edição de Cliente"
+
+    let formCliente = document.getElementById('cliente-form')
+
+    formCliente.removeChild(formCliente.lastChild)
+
+
+    document.getElementById('lista-dos-clientes').setAttribute('class', 'escondido')
+
+
+    let buttonEdit = document.createElement('button')
+    buttonEdit.setAttribute('class', 'btn btn-warning')
+    buttonEdit.innerHTML = "Salvar Alterações"
+    buttonEdit.onclick = () => {
+        nome = document.getElementById('nome-completo').value
+        cpf = document.getElementById('cpf').value.replaceAll('.', '').replace('-', '')
+        telefone = document.getElementById('telefone').value
+        nascimento = document.getElementById('data-nascimento').value
+    
+        if (nascimento.length != 10) {
+            return
+        }
+    
+        let ano = parseInt(nascimento.substring(0, 4))
+    
+        let hoje = new Date().getFullYear()
+    
+        console.log(cpf)
+        console.log(hoje)
+        if ( ano < 1900 || ano > hoje)
+        {
+            alert("Ano de nascimento inválido")
+            return 
+        }
+    
+        let body =
+        {
+            "NomeCompleto": nome,
+            "CPF": cpf,
+            "telefone": telefone,
+            "dataNascimento": nascimento
+        }
+        this.Put(body, 'clientes/' + id)
+    }
+
+
+    let buttonCancelEdit = document.createElement('button')
+    buttonCancelEdit.setAttribute('class', 'btn btn-danger')
+    buttonCancelEdit.innerHTML = "Cancelar"
+
+    buttonCancelEdit.onclick = modoCadastroCliente
+
+    formCliente.appendChild(buttonEdit)
+    formCliente.appendChild(buttonCancelEdit)
+
+
+    let clienteSelecionado = await this.getClientById(id)
+
+    document.getElementById('nome-completo').value = clienteSelecionado.nomeCompleto
+    document.getElementById('cpf').value = clienteSelecionado.cpf
+    document.getElementById('telefone').value = clienteSelecionado.telefone
+    document.getElementById('data-nascimento').value = clienteSelecionado.dataNascimento.substring(0, 10)
+}
+
+async function modoCadastroCliente()
+{
+    let title = document.getElementById('title-cad-cliente')
+    title.innerHTML = "Cadastro de Clientes"
+
+    let formCliente = document.getElementById('cliente-form')
+    formCliente.removeChild(formCliente.lastChild)
+    formCliente.removeChild(formCliente.lastChild)
+
+    let buttonCadastro = document.createElement('button')
+    buttonCadastro.setAttribute('class', 'btn btn-success')
+    buttonCadastro.onclick = cadastrarCliente
+    buttonCadastro.innerHTML = "Cadastrar"
+
+    document.getElementById('nome-completo').value = ""
+    document.getElementById('cpf').value = ""
+    document.getElementById('telefone').value = ""
+    document.getElementById('data-nascimento').value = ""
+
+    document.getElementById('lista-dos-clientes').setAttribute('class', '')
+    formCliente.appendChild(buttonCadastro)
+
+    let listaClientes = document.getElementById('lista-clientes')
+    while(listaClientes.firstChild)
+        listaClientes.removeChild(listaClientes.firstChild)
 }
