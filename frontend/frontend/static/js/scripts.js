@@ -162,7 +162,7 @@ function listarFilmes()
             console.log(filme)
             // Div com todas informações do item filme
             let divFilme = document.createElement('div')
-            divFilme.setAttribute('class', 'movie-box')
+            divFilme.setAttribute('class', 'border rounded p-2 m-2')
 
 
             let divNome = document.createElement('p')
@@ -185,6 +185,24 @@ function listarFilmes()
             let divPreco = document.createElement('p')
             divPreco.innerHTML = "Preço: " + formatReal(filme.preco)
             divFilme.appendChild(divPreco)
+
+            let buttonDiv = document.createElement('div')
+            buttonDiv.setAttribute('class', 'd-flex flex-row-reverse')
+
+            let buttonDelete = document.createElement('button')
+            buttonDelete.setAttribute('class', 'btn btn-danger')
+            buttonDelete.innerHTML = "Excluir"
+            buttonDiv.appendChild(buttonDelete)
+
+            let buttonEdit = document.createElement('button')
+            buttonEdit.setAttribute('class', 'btn btn-warning')
+            buttonEdit.innerHTML = "Editar"
+            buttonDiv.appendChild(buttonEdit)
+
+
+
+            divFilme.appendChild(buttonDiv)
+
 
             listaFilmes.appendChild(divFilme)
         }
@@ -316,8 +334,6 @@ function criarAluguel()
 
     Post(body, "alugueis")
 }
-
-
 async function getFilmeById(id)
 {
     const req = await fetch(url + 'filmes/' + id)

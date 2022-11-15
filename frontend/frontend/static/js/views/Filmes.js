@@ -24,7 +24,7 @@ export default class extends AbstractView {
                     </select>
 
                     <input id="data-lancamento" type="date" placeholder="Data de Lançamento"/>
-                    <button onclick="cadastrarFilme()">Cadastrar</button>
+                    <button class="btn btn-success"onclick="cadastrarFilme()">Cadastrar</button>
                 </div>    
             </div>  
 
@@ -34,7 +34,7 @@ export default class extends AbstractView {
                     Esta é a sessão de filmes disponíveis para alugar!
                 </p>
                 
-                <button onclick="listarFilmes()">Listar Filmes</button>
+                <button class="btn btn-primary "onclick="listarFilmes()">Listar Filmes</button>
                 <div id="lista-filmes"></div>
             </div>  
         `;
