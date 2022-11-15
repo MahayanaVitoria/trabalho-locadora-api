@@ -602,3 +602,11 @@ async function modoCadastroCliente()
     while(listaClientes.firstChild)
         listaClientes.removeChild(listaClientes.firstChild)
 }
+
+function menuShow(){
+    if(document.querySelector('#menu').classList.contains('open')){
+        document.querySelector('#menu').classList.remove('open')
+    } else {
+        document.querySelector('#menu').classList.add('open')
+    }
+}

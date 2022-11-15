@@ -8,6 +8,8 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/
 app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 
 app.use("/static", express.static(path.resolve(__dirname, "frontend", "static"), {extensions: ["js"]}))
+app.use("/static", express.static(path.resolve(__dirname, "frontend", "static"), {extensions: ["png"]}))
+app.use("/static", express.static(path.resolve(__dirname, "frontend", "static"), {extensions: ["svg"]}))
 
 app.get("/*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "index.html"));

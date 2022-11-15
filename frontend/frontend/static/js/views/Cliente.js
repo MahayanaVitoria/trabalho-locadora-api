@@ -9,7 +9,7 @@ export default class extends AbstractView {
     async getHtml() {
         return `
             <div class="mb-5">
-                <h1 id="title-cad-cliente">Cadastro de Clientes</h1>
+                <h1 class="titulo" id="title-cad-cliente">Cadastro de Clientes</h1>
                 <div id="cliente-form" class="form">
                     <input id="nome-completo" placeholder="Nome Completo" type="text"/>    
                     <input id="cpf" placeholder="CPF" type="text" autocomplete="off" maxlength="14" onkeypress="mask_cpf()"/>
@@ -19,7 +19,7 @@ export default class extends AbstractView {
             </div>
             
             <div id="lista-dos-clientes">
-                <h1>Lista de Clientes</h1>
+                <h1 class="titulo">Lista de Clientes</h1>
                 <button onclick="listarClientes()" class="btn btn-primary">Listar Clientes </button>
                 <div class="my-5" id="lista-clientes"></div>                
             

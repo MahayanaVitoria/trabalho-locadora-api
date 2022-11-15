@@ -9,7 +9,7 @@ export default class extends AbstractView {
     async getHtml() {
         return `
             <div>
-                <h1>Cadastro de Filmes</h1>
+                <h1 class="titulo">Cadastro de Filmes</h1>
                 <div class="form">
                     <input id="nome" placeholder="Nome do Filme" type="text" autocomplete="off"/>    
                     <input id="genero" placeholder="Gênero" type="text"/>
@@ -29,8 +29,8 @@ export default class extends AbstractView {
             </div>  
 
             <div class="mt-5">
-                <h1>Catálogo</h1>
-                <p> 
+                <h1 class="titulo">Catálogo</h1>
+                <p class="texto"> 
                     Esta é a sessão de filmes disponíveis para alugar!
                 </p>
                 

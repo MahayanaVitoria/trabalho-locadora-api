@@ -9,9 +9,9 @@ export default class extends AbstractView {
     async getHtml() {
         return `
             <div>
-                <h1>Alugueis</h1>
+                <h1 class="titulo">Alugueis</h1>
                 <div class="mb-5 border rounded p-2">
-                    <h3> Novo Aluguel </h1>
+                    <h3 class="texto"> Novo Aluguel </h1>
                     <div id="form-aluguel" class="form d-flex bd-highlight">
                         <select class="form-select" id="select-clientes">
                             <option value="-1">Cliente</options>                        
@@ -27,7 +27,7 @@ export default class extends AbstractView {
 
                                     
                 <div class="mb-5 border rounded p-2 pb-5">
-                    <h3> Lista de Alugueis </h3>
+                    <h3 class="texto"> Lista de Alugueis </h3>
                     
                     <div class="form d-inline flex bg-highlight">
                         <select class="form-select form-select-lg mb-3" id="select-clientes-2" aria-label=".form-select-lg example">

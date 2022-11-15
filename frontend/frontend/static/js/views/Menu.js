@@ -8,7 +8,8 @@ export default class extends AbstractView {
 
     async getHtml() {
         return `
-            <h1>Bem vindo a locadora!</h1>
+            <h1 class="titulo">Bem vindo a locadora!</h1>
+            <p class="texto"> Utilize os menus para navegar</p>
         `;
     }
 }
