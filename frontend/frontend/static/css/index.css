@@ -150,3 +150,7 @@ footer{
     color: #363636;
     transition: all 0.3s;
 }
+
+.form{
+    display: flex;
+}
